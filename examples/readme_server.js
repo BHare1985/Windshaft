@@ -7,13 +7,13 @@
 var Windshaft = require('../lib/windshaft');
 var _         = require('underscore');
 var config = {
-	dbtype: 'postgis',
+	dbtype: 'mssql',
     base_url: '/database/:dbname/table/:table',
     grainstore: {
 		map: {srid: 3857},
 		datasource: {
-			host: "localhost",
-			user: "postgres",
+			host: "C-256\sqlexpress",
+			user: "sa",
 			password: "708050",
 			geometry_field: "the_geom_webmercator",
 			extent: "-20037508.3,-20037508.3,20037508.3,20037508.3",
