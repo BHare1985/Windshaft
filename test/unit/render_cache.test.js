@@ -23,7 +23,7 @@ suite('render_cache', function() {
 
     test('render_cache can create a unique key from request, stripping xyz/callback', function(){
         var render_cache = new RenderCache(100, mml_store);
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, sql:"select *", geom_type:'point', format:'png' }};
+        var req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, sql:"select *", geom_type:'point', format:'png' }};
 
         assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table:png:point:select *::');
     });
@@ -35,7 +35,7 @@ suite('render_cache', function() {
 
     test('render_cache can generate a tilelive object', function(){
         var render_cache = new RenderCache(100, mml_store);
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
@@ -46,11 +46,11 @@ suite('render_cache', function() {
 
     test('render_cache can generate > 1 tilelive object', function(){
         var render_cache = new RenderCache(100, mml_store);
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            req = {params: {dbname: "windshaft_test", table: 'test_table_2', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+            req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table_2', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
             render_cache.getRenderer(req, function(err, renderer2){
                 assert.equal(_.keys(render_cache.renderers).length, 2);
             });
@@ -60,7 +60,7 @@ suite('render_cache', function() {
 
     test('render_cache can reuse tilelive object', function(){
         var render_cache = new RenderCache(100, mml_store);
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
@@ -73,11 +73,11 @@ suite('render_cache', function() {
     test('render_cache can delete all tilelive objects when reset', function(){
         var render_cache = new RenderCache(100, mml_store);
 
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
 
-            var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png',
+            var req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png',
                 sql: "(SELECT * FROM test_table LIMIT 50) as q" }};
             render_cache.getRenderer(req, function(err, renderer){
                 assert.equal(_.keys(render_cache.renderers).length, 2);
@@ -93,7 +93,7 @@ suite('render_cache', function() {
     test('render_cache can delete only related tilelive objects when reset', function(){
         var render_cache = new RenderCache(100, mml_store);
 
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
             req.params.sql = "(SELECT * FROM test_table LIMIT 50) as q";
@@ -118,7 +118,7 @@ suite('render_cache', function() {
     test('render_cache can purge all tilelive objects', function(){
         var render_cache = new RenderCache(100, mml_store);
 
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
@@ -142,7 +142,7 @@ suite('render_cache', function() {
 
     test('render_cache automatically deletes tilelive only after timeout', function(){
         var render_cache = new RenderCache(5, mml_store);
-        var req = {params: {dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
+        var req = {params: {dbtype: "postgis", dbname: "windshaft_test", table: 'test_table', x: 4, y:4, z:4, geom_type:'polygon', format:'png' }};
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);

@@ -27,7 +27,7 @@ suite('windshaft', function() {
         assert.throws(
             function(){
                 var ws = new Windshaft.Server({unbuffered_logging:true});
-            }, /Must initialise Windshaft with a base URL and req2params function/
+            }, /Must initialise Windshaft with a database type, base URL and req2params function/
         );
     });
 

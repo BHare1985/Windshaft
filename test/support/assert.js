@@ -184,15 +184,7 @@ assert.response = function(server, req, res, msg){
 
                 // Assert response body
                 if (res.body !== undefined) {
-                    var eql = res.body instanceof RegExp
-                      ? res.body.test(response.body)
-                      : res.body === response.body;
-                    assert.ok(
-                        eql,
-                        msg + 'Invalid response body.\n'
-                            + '    Expected: ' + res.body + '\n'
-                            + '    Got: ' + response.body
-                    );
+                    assert.equal(response.body, res.body);
                 }
 
                 // Assert response status

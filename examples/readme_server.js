@@ -3,13 +3,23 @@
 //
 // If you want to get something running quickly, follow the instructions for a seed DB in test/windshaft.test.sql
 
+
 var Windshaft = require('../lib/windshaft');
 var _         = require('underscore');
 var config = {
+	dbtype: 'postgis',
     base_url: '/database/:dbname/table/:table',
     grainstore: {
-                 datasource: {user:'postgres', password:'708050', host: '127.0.0.1', port: 5432}
-//               , styles: {point: "#test_table{marker-fill: black;marker-line-color: black;}"}
+		map: {srid: 3857},
+		datasource: {
+			host: "localhost",
+			user: "postgres",
+			password: "708050",
+			geometry_field: "the_geom_webmercator",
+			extent: "-20037508.3,-20037508.3,20037508.3,20037508.3",
+			srid: 3857,
+			max_size: 10
+		}
     }, //see grainstore npm for other options
     redis: {host: '127.0.0.1', port: 6379},
     enable_cors: true,
