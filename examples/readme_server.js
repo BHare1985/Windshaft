@@ -8,7 +8,7 @@ var _         = require('underscore');
 var config = {
     base_url: '/database/:dbname/table/:table',
     grainstore: {
-                 datasource: {user:'postgres', host: '127.0.0.1', port: 5432}
+                 datasource: {user:'postgres', password:'708050', host: '127.0.0.1', port: 5432}
 //               , styles: {point: "#test_table{marker-fill: black;marker-line-color: black;}"}
     }, //see grainstore npm for other options
     redis: {host: '127.0.0.1', port: 6379},
@@ -16,7 +16,7 @@ var config = {
     req2params: function(req, callback){
 
         // no default interactivity. to enable specify the database column you'd like to interact with
-        req.params.interactivity = null;
+        req.params.interactivity = 'name';
 
         // this is in case you want to test sql parameters eg ...png?sql=select * from my_table limit 10
         req.params =  _.extend({}, req.params);
