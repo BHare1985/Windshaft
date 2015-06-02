@@ -27,6 +27,6 @@
 		"mocha": "2.2.5"
     },
     "scripts": {
-        "test": "mocha test/acceptance/*.js test/unit/*.js"
+        "test": "mocha -w test/acceptance/*.js test/unit/*.js"
     }
 }

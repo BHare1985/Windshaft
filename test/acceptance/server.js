@@ -20,6 +20,7 @@ suite('server', function() {
 		server.setMaxListeners(0);
 	});
 
+
 	suiteTeardown(function() {
 		server.close();
 	});

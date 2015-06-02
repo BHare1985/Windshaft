@@ -12,7 +12,7 @@ var config = {
     grainstore: {
 		map: {srid: 3857},
 		datasource: {
-			host: "C-256\sqlexpress",
+			host: "C-256\\sqlexpress",
 			user: "sa",
 			password: "708050",
 			geometry_field: "the_geom_webmercator",

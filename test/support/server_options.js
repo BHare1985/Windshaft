@@ -3,9 +3,9 @@ var _ = require('underscore');
 module.exports = function(opts) {
     
     var config = {
-		dbtype: 'postgis',
+		dbtype: global.environment.dbtype,
         base_url: '/database/:dbname/table/:table',
-        grainstore: {datasource: global.environment.postgres},
+        grainstore: {datasource: global.environment.datasource},
         redis: global.environment.redis,
         enable_cors: global.environment.enable_cors,
         unbuffered_logging: true, // for smoother teardown from tests
