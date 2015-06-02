@@ -132,7 +132,7 @@ suite('render_cache', function() {
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            req.params.sql = "(SELECT * FROM test_table LIMIT 50) as q";
+            req.params.sql = "(SELECT * FROM test_table) as q";
 
             render_cache.getRenderer(req, function(err, renderer){
                 delete req.params.sql;
