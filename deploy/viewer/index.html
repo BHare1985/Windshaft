@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=UTF-8">
+  <title>Overlay map types</title>
+  <link href='wax/dist/controls.css' rel='stylesheet' type='text/css'>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+  <script src='wax/dist/wax.g.js' type='text/javascript'></script>
+   <script src="underscore-min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script>
+	var texas = new google.maps.LatLng(39.816975, -86.198730);
+	var atlanta = new google.maps.LatLng(33.80653802509606, -84.39697265625);
+	var orlando = new google.maps.LatLng(28.542909815015516, -81.38946533203125);
+
+	$(document).ready(function(){
+		var map = setupMap();
+		var baseURL = "http://localhost:4000/database/<%= dbname %>/table/<%= table %>/{z}/{x}/{y}";
+		var layers = [];
+		
+		var tilejson = {
+			tilejson: '1.0.0',
+			scheme: 'xyz',
+			tiles: [],
+			grids: [],
+			formatter: function(options, data) { return JSON.stringify(data).split("\n").join("<br />"); }
+		};
+
+		$('#update_map').click(function(ev){
+			ev.preventDefault();
+
+			var dbname = $('#dbname').val();
+			var table = $('#table').val();
+			var sql = $('#sql').val();
+			var style = encodeURIComponent($('#style').val());
+			
+			var url = _.template(baseURL, {dbname: dbname, table: table});
+
+			tilejson.tiles = [url + '.png' + '?sql='+sql+'&style='+style];
+			tilejson.grids = [url + '.grid.json' + '?sql='+sql+'&style='+style];
+
+			map.overlayMapTypes.clear();
+			
+			var testMap = new wax.g.connector(tilejson);
+			map.overlayMapTypes.push(testMap);
+			wax.g.interaction().map(map).tilejson(tilejson).on(wax.tooltip().parent(map.getDiv()).events());
+		});
+	});
+
+function setupMap() {
+
+	var mapOptions = {
+		center: orlando,
+		zoom: 12,
+		mapTypeControl: true,
+		mapTypeControlOptions: {
+			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+			position: google.maps.ControlPosition.TOP_LEFT
+		},
+		panControl: false,
+		zoomControl: true,
+		zoomControlOptions: {
+			style: google.maps.ZoomControlStyle.SMALL,
+			position: google.maps.ControlPosition.TOP_LEFT
+		},
+		scaleControl: true,
+		scaleControlOptions: {
+			position: google.maps.ControlPosition.TOP_LEFT
+		},
+		streetViewControl: true,
+		streetViewControlOptions: {
+			position: google.maps.ControlPosition.TOP_LEFT
+		},
+		zoomControl: true,
+		zoomControlOptions: {
+			style: google.maps.ZoomControlStyle.LARGE
+		}
+	};
+	var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+	return map;
+}
+</script>
+</head>
+<body>
+	<input type="text" value="georgia" id="dbname">
+	<input type="text" value="EXPORT_OUTPUT" id="table">
+	<input type="text" value="" id="sql">
+	<input type="text" value="" id="style">
+	<input type="button" id="update_map" value="Go">
+	<div id="map" style="width: 1500px; height: 900px"></div>
+</body>
+</html>
