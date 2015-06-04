@@ -12,10 +12,10 @@
 	var texas = new google.maps.LatLng(39.816975, -86.198730);
 	var atlanta = new google.maps.LatLng(33.80653802509606, -84.39697265625);
 	var orlando = new google.maps.LatLng(28.542909815015516, -81.38946533203125);
-
+	var interaction;
 	$(document).ready(function(){
 		var map = setupMap();
-		var baseURL = "http://localhost:4000/database/<%= dbname %>/table/<%= table %>/{z}/{x}/{y}";
+		var baseURL = "http://localhost:4000/<%= dbname %>/tiles/<%= table %>/{z}/{x}/{y}";
 		var layers = [];
 		
 		var tilejson = {
@@ -37,21 +37,26 @@
 			var url = _.template(baseURL, {dbname: dbname, table: table});
 
 			tilejson.tiles = [url + '.png' + '?sql='+sql+'&style='+style];
-			tilejson.grids = [url + '.grid.json' + '?sql='+sql+'&style='+style];
+			tilejson.grids = [url + '.grid.json' + '?sql='+sql+'&style='+style+'&interactivity=ST_NAME'];
 
 			map.overlayMapTypes.clear();
+			if(interaction)
+			interaction.remove();
 			
 			var testMap = new wax.g.connector(tilejson);
 			map.overlayMapTypes.push(testMap);
-			wax.g.interaction().map(map).tilejson(tilejson).on(wax.tooltip().parent(map.getDiv()).events());
+			interaction = wax.g.interaction().map(map).tilejson(tilejson).on(wax.tooltip().parent(map.getDiv()).events());
 		});
+		
+		//$('#update_map').click();
+		//setTimeout('window.location.href=window.location.href;', 30000);
 	});
 
 function setupMap() {
 
 	var mapOptions = {
 		center: orlando,
-		zoom: 12,
+		zoom: 10,
 		mapTypeControl: true,
 		mapTypeControlOptions: {
 			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
@@ -83,8 +88,8 @@ function setupMap() {
 </head>
 <body>
 	<input type="text" value="georgia" id="dbname">
-	<input type="text" value="EXPORT_OUTPUT" id="table">
-	<input type="text" value="" id="sql">
+	<input type="text" value="FLORIDA" id="table">
+	<input type="text" value="SELECT * FROM FLORIDA WHERE FUNC_CLASS = 2" id="sql">
 	<input type="text" value="" id="style">
 	<input type="button" id="update_map" value="Go">
 	<div id="map" style="width: 1500px; height: 900px"></div>

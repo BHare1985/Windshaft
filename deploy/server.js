@@ -9,7 +9,7 @@ var _         = require('underscore');
 var config = {
 	dbtype: 'mssql',
 	geom_type: 'polygon',
-    base_url: '/database/:dbname/table/:table',
+    base_url: '/:dbname/tiles/:table',
 
     grainstore: {
 		map: {srid: 3857},
