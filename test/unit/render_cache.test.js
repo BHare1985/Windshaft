@@ -1,5 +1,5 @@
 var   _             = require('underscore')
-    , sys           = require('sys')
+    , sys           = require('util')
     , th            = require('../support/test_helper.js')
     , assert        = require('assert')
     , grainstore    = require('grainstore')
@@ -7,10 +7,12 @@ var   _             = require('underscore')
     , serverOptions = require('../support/server_options')
     , tests         = module.exports = {};
 
-// initialize core mml_store
-var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
 
 suite('render_cache', function() {
+
+	// initialize core mml_store
+	var mml_store  = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
+
 
     test('true', function(done) {
         assert.equal(global.environment.name, 'test');

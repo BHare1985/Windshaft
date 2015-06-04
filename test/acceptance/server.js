@@ -190,7 +190,7 @@ suite('server', function() {
         }, function(res){
             assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.png',  function(err, similarity) {
                 if (err) throw err;
-                assert.deepEqual(res.headers['contenT-type'], "image/png");
+                assert.deepEqual(res.headers['content-type'], "image/png");
                 done();
             });
         });
@@ -302,16 +302,14 @@ suite('server', function() {
     });
 	*/
 
-    test("get'ing a json with default style and nointeractivity should return a grid but with err 500",  function(done){
+    test("get'ing a json with default style and nointeractivity should return error",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
             method: 'GET'
         },{
             status: 500,
-            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function(res){
-            var expected_json = {};
-            assert.deepEqual(JSON.parse(res.body), expected_json);
+            assert.deepEqual(res.body, 'Tileset has no interactivity');
             done();
         });
     });
@@ -405,6 +403,20 @@ verified working, but isnt made for interactivity=name
             headers: {'X-AfterTileRender': 'called', 'X-AfterTileRender2': 'called'}
         }, function() { done(); });
     });
-
+    
+	test("Database errors are sent in response body",  function(done) {
+		var sql = querystring.stringify({sql: "BROKEN QUERY"})
+		assert.response(server, {
+			url: '/database/windshaft_test/table/test_table/6/31/24.png?' + sql,
+			method: 'GET'
+		},{
+			status: 500
+		}, function(res) {
+		  // TODO: actual error may depend on backend language localization
+		  assert.ok(res.body.match(new RegExp(/syntax/)),
+			  'Body does not contain the "syntax error" message: ' + res.body);
+		  done();
+		});
+	});
 });
 

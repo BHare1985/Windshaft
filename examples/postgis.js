@@ -7,30 +7,26 @@
 var Windshaft = require('../lib/windshaft');
 var _         = require('underscore');
 var config = {
-	dbtype: 'mssql',
-	geom_type: 'polygon',
-    base_url: '/:dbname/tiles/:table',
+	dbtype: 'postgis',
+    base_url: '/database/:dbname/table/:table',
     grainstore: {
 		map: {srid: 3857},
 		datasource: {
-			host: "C-256\\sqlexpress",
-			user: "sa",
+			host: "127.0.0.1",
+			user: "postgres",
 			password: "708050",
-			geometry_field: "Shape",
-			extent: "-180,-90,180,90",
-			srid: 4326,
+			geometry_field: "the_geom_webmercator",
+			extent: "-20037508.3,-20037508.3,20037508.3,20037508.3",
+			srid: 3857,
 			max_size: 10
-		},
-		styles: {
-			 polygon: "::line {line-color: red; line-width: 4; line-join: round; line-cap: round;}",  
-		},
-    },
+		}
+    }, //see grainstore npm for other options
     redis: {host: '127.0.0.1', port: 6379},
     enable_cors: true,
     req2params: function(req, callback){
 
         // no default interactivity. to enable specify the database column you'd like to interact with
-        req.params.interactivity = 'HIGHWAY_NM';
+        req.params.interactivity = null;
 
         // this is in case you want to test sql parameters eg ...png?sql=select * from my_table limit 10
         req.params =  _.extend({}, req.params);
