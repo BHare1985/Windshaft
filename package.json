@@ -15,13 +15,13 @@
       "email": "brian@brianhare.com"
     },
     "dependencies": {
-        "underscore"  : "1.1.x",
-        "step": "0.0.x",
-        "grainstore": "git://github.com/BHare1985/grainstore.git",
-  		"generic-pool": "1.0.x",
-        "express": "2.4.3",
-        "tilelive": "5.7.1",
-        "tilelive-mapnik": "0.6.16"
+	"underscore"  : "1.1.x",
+	"step": "0.0.x",
+	"grainstore": "https://github.com/BHare1985/grainstore/tarball/master",
+	"generic-pool": "1.0.x",
+	"express": "2.4.3",
+	"tilelive": "5.7.1",
+	"tilelive-mapnik": "0.6.16"
     },
     "devDependencies": {
 		"mocha": "2.2.5"
