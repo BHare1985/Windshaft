@@ -27,7 +27,6 @@ function getDefaults(params) {
     return {
         dbtype: serverOptions.dbtype,
         dbname: 'windshaft_test',
-        geom_type: serverOptions.geom_type,
         table: params.table,
         style: default_style(params),
         sql: default_sql(params),

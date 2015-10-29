@@ -21,7 +21,6 @@ var config = {
 			max_size: 10
 		}
     }, //see grainstore npm for other options
-    redis: {host: '127.0.0.1', port: 6379},
     enable_cors: true,
     req2params: function(req, callback){
 

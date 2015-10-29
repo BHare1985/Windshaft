@@ -1,5 +1,3 @@
-// FLUSHALL Redis before starting
-
 var   assert        = require('../support/assert')
     , tests         = module.exports = {}
     , _             = require('underscore')
