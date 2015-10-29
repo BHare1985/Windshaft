@@ -13,10 +13,10 @@ var config = {
     grainstore: {
 		map: {srid: 3857},
 		datasource: {
-			host: "C-256\\sqlexpress",
+			host: "ALIENWARE",
 			user: "sa",
-			password: "708050",
-			geometry_field: "Shape",
+			password: "sa",
+			geometry_field: "the_geom",
 			extent: "-180,-90,180,90",
 			srid: 4326,
 			max_size: 10
@@ -25,15 +25,12 @@ var config = {
 			 polygon: "::line {line-color: red; line-width: 4; line-join: round; line-cap: round;}",  
 		},
     },
-    redis: {host: '127.0.0.1', port: 6379},
     enable_cors: true,
     req2params: function(req, callback){
 
         // no default interactivity. to enable specify the database column you'd like to interact with
-        req.params.interactivity = 'HIGHWAY_NM';
+        req.params.interactivity = 'name';
 
-        // this is in case you want to test sql parameters eg ...png?sql=select * from my_table limit 10
-        req.params =  _.extend({}, req.params);
         _.extend(req.params, req.query);
 
         // send the finished req object on

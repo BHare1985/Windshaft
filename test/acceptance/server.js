@@ -43,125 +43,8 @@ suite('server', function() {
         }, function() { done(); } );
     });
 
-    test("get'ing blank style returns default style",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/style',
-            method: 'GET'
-        },{
-            status: 200,
-            body: '{"style":"#test_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}"}'
-        }, function() { done(); } );
-    });
-
-    test("post'ing no style returns 400 with errors",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/style',
-            method: 'POST'
-        },{
-            status: 400,
-            body: '{"error":"must send style information"}'
-        }, function() { done(); } );
-    });
-
-    test("post'ing bad style returns 400 with error",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_2/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;}'})
-        },{
-            status: 500,
-            body: JSON.stringify(["style.mss:1:14 Unrecognized rule: backgxxxxxround-color"])
-        }, function() { done(); } );
-    });
-
-    test("post'ing multiple bad styles returns 400 with error array",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_2/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#test_table_2{backgxxxxxround-color:#fff;foo:bar}'})
-        },{
-            status: 500,
-            body: JSON.stringify(["style.mss:1:14 Unrecognized rule: backgxxxxxround-color","style.mss:1:41 Unrecognized rule: foo"])
-        }, function() { done(); } );
-    });
-
-    test("post'ing good style returns 200",  function(done){
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#Map {background-color:#fff;}'})
-        },{
-            status: 200
-        }, function() { done(); } );
-    });
-
-    test("post'ing good style returns 200 then getting returns original style",  function(done){
-        var style = '#Map {background-color:#fff;}';
-
-        // TODO: use Step ?
-
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: style})
-        },{
-            status: 200
-        }, function() {
-
-            assert.response(server, {
-                url: '/database/windshaft_test/table/test_table_3/style',
-                method: 'GET'
-            },{
-                status: 200,
-                body: JSON.stringify({style: style})
-            }, function() { done(); } );
-
-        });
-
-    });
-
-    test("deleting a style returns 200 and returns default therafter",  function(done){
-        var style = '#Map {background-color:#fff;}';
-        var default_style = "#test_table_3 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}";
-
-        // TODO: use Step ?
-
-        assert.response(server, {
-            url: '/database/windshaft_test/table/test_table_3/style',
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: style})
-        },{
-            status: 200
-        }, function() {
-
-            assert.response(server, {
-                url: '/database/windshaft_test/table/test_table_3/style',
-                method: 'DELETE'
-            },{
-                status: 200
-            }, function() {
-
-                assert.response(server, {
-                    url: '/database/windshaft_test/table/test_table_3/style',
-                    method: 'GET'
-                },{
-                    status: 200,
-                    body: JSON.stringify({style: default_style})
-                }, function() { done(); } );
-
-            });
-
-        });
-
-
-    });
-	/*
-    test("get'ing a tile with default style should return an expected tile",  function(done){
+/*
+    test.only("get'ing a tile with default style should return an expected tile",  function(done){
         assert.response(server, {
             url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
             method: 'GET',
@@ -283,7 +166,7 @@ suite('server', function() {
             });
         });
     });
-	*/
+
 	
 	/*
 	Implement this someday

@@ -6,7 +6,6 @@ module.exports = function(opts) {
 		dbtype: global.environment.dbtype,
         base_url: '/database/:dbname/table/:table',
         grainstore: {datasource: global.environment.datasource},
-        redis: global.environment.redis,
         enable_cors: global.environment.enable_cors,
         unbuffered_logging: true, // for smoother teardown from tests
         req2params: function(req, callback){

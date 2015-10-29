@@ -37,7 +37,7 @@
 			var url = _.template(baseURL, {dbname: dbname, table: table});
 
 			tilejson.tiles = [url + '.png' + '?sql='+sql+'&style='+style];
-			tilejson.grids = [url + '.grid.json' + '?sql='+sql+'&style='+style+'&interactivity=ST_NAME'];
+			tilejson.grids = [url + '.grid.json' + '?sql='+sql+'&style='+style];
 
 			map.overlayMapTypes.clear();
 			if(interaction)
@@ -87,10 +87,10 @@ function setupMap() {
 </script>
 </head>
 <body>
-	<input type="text" value="georgia" id="dbname">
-	<input type="text" value="FLORIDA" id="table">
-	<input type="text" value="SELECT * FROM FLORIDA" id="sql">
-	<input type="text" value="" id="style">
+	DB: <input type="text" value="windshaft_test" id="dbname">
+	Table: <input type="text" value="test_table" id="table">
+	Sql: <input type="text" value="SELECT * FROM test_table" id="sql">
+	Style: <input type="text" value="::point {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}" id="style">
 	<input type="button" id="update_map" value="Go">
 	<div id="map" style="width: 1500px; height: 900px"></div>
 </body>

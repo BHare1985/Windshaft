@@ -27,6 +27,7 @@
 		"mocha": "2.2.5"
     },
     "scripts": {
-        "test": "mocha test/acceptance/*.js test/unit/*.js"
+        "test": "mocha test/acceptance/*.js test/unit/*.js",
+        "start": "node deploy/server.js"
     }
 }
