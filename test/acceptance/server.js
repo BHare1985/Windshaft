@@ -4,7 +4,7 @@ var   assert        = require('../support/assert')
     , querystring   = require('querystring')
     , fs            = require('fs')
     , th            = require('../support/test_helper')
-    , Windshaft     = require('../../lib/windshaft')
+    , Windwalker     = require('../../lib')
     , ServerOptions = require('../support/server_options')
     , http          = require('http');
 
@@ -14,7 +14,7 @@ var server;
 suite('server', function() {
 
 	suiteSetup(function() {
-		server = new Windshaft.Server(ServerOptions);
+		server = new Windwalker.Server(ServerOptions);
 		server.setMaxListeners(0);
 	});
 
@@ -44,7 +44,7 @@ suite('server', function() {
 /*
     test.only("get'ing a tile with default style should return an expected tile",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.png',
             method: 'GET',
             encoding: 'binary'
         },{
@@ -62,7 +62,7 @@ suite('server', function() {
     test("get'ing a tile with default style and sql should return a constrained tile",  function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"});
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + sql,
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + sql,
             method: 'GET',
             encoding: 'binary'
         },{
@@ -80,7 +80,7 @@ suite('server', function() {
     test("get'ing a tile with url specified style should return an expected tile",  function(done){
         var style = querystring.stringify({style: "#test_table{marker-fill: blue;marker-line-color: black;}"});
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + style,
             method: 'GET',
             encoding: 'binary'
         },{
@@ -98,7 +98,7 @@ suite('server', function() {
     test("get'ing a tile with url specified style should return an expected tile twice",  function(done){
         var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + style,
             method: 'GET',
             encoding: 'binary'
         },{
@@ -116,7 +116,7 @@ suite('server', function() {
     test("dynamically set styles in same session and then back to default",  function(done){
         var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + style,
             method: 'GET',
             encoding: 'binary'
         },{
@@ -133,7 +133,7 @@ suite('server', function() {
                 // second style
                 var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
                 assert.response(server, {
-                    url: '/database/windshaft_test/table/test_table/13/4011/3088.png?' + style,
+                    url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + style,
                     method: 'GET',
                     encoding: 'binary'
                 },{
@@ -146,7 +146,7 @@ suite('server', function() {
 
                         //back to default
                         assert.response(server, {
-                            url: '/database/windshaft_test/table/test_table/13/4011/3088.png',
+                            url: '/database/Windwalker_test/table/test_table/13/4011/3088.png',
                             method: 'GET',
                             encoding: 'binary'
                         },{
@@ -170,7 +170,7 @@ suite('server', function() {
 	Implement this someday
     test.("get'ing a json with default style should return an grid",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json',
             method: 'GET'
         },{
             status: 200,
@@ -185,7 +185,7 @@ suite('server', function() {
 
     test("get'ing a json with default style and nointeractivity should return error",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json',
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json',
             method: 'GET'
         },{
             status: 500,
@@ -198,7 +198,7 @@ suite('server', function() {
 
     test("get'ing a json with default style and single interactivity should return a grid",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
             method: 'GET'
         },{
             status: 200,
@@ -218,7 +218,7 @@ suite('server', function() {
 
     test("get'ing a json with default style and multiple interactivity should return a grid",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name,address',
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json?interactivity=name,address',
             method: 'GET'
         },{
             status: 200,
@@ -243,7 +243,7 @@ verified working, but isnt made for interactivity=name
     test("get'ing a json with default style and sql should return a constrained grid",  function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"})
 		assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/13/4011/3088.grid.json?interactivity=name&' + sql,
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json?interactivity=name&' + sql,
             method: 'GET'
         },{
             status: 200,
@@ -257,7 +257,7 @@ verified working, but isnt made for interactivity=name
 */
     test("get'ing a tile with CORS enabled should return CORS headers",  function(done){
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/6/31/24.png',
+            url: '/database/Windwalker_test/table/test_table/6/31/24.png',
             method: 'GET'
         },{
             status: 200,
@@ -267,7 +267,7 @@ verified working, but isnt made for interactivity=name
 
     test("beforeTileRender is called when the client request a tile",  function(done) {
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/6/31/24.png',
+            url: '/database/Windwalker_test/table/test_table/6/31/24.png',
             method: 'GET'
         },{
             status: 200,
@@ -277,7 +277,7 @@ verified working, but isnt made for interactivity=name
 
     test("afterTileRender is called when the client request a tile",  function(done) {
         assert.response(server, {
-            url: '/database/windshaft_test/table/test_table/6/31/24.png',
+            url: '/database/Windwalker_test/table/test_table/6/31/24.png',
             method: 'GET'
         },{
             status: 200,
@@ -288,7 +288,7 @@ verified working, but isnt made for interactivity=name
 	test("Database errors are sent in response body",  function(done) {
 		var sql = querystring.stringify({sql: "BROKEN QUERY"})
 		assert.response(server, {
-			url: '/database/windshaft_test/table/test_table/6/31/24.png?' + sql,
+			url: '/database/Windwalker_test/table/test_table/6/31/24.png?' + sql,
 			method: 'GET'
 		},{
 			status: 500

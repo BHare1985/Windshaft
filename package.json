@@ -1,33 +1,38 @@
 {
-    "name": "windshaft",
-    "version": "0.4.0",
-    "main": "./lib/windshaft/index.js",
-    "description": "A Node.js based map tile server for SQL server & Mapnik",
-    "url": "https://github.com/BHare1985/Windshaft",
-    "licenses": [{ "type": "MIT" }],
-    "repository": [{
+    "name": "Windwalker",
+    "version": "0.0.1",
+    "main": "./lib/index.js",
+    "description": "A Node.js based map tile server using Mapnik",
+    "url": "https://github.com/BHare1985/Windwalker",
+    "repository": {
         "type": "git",
-        "url": "git://github.com/BHare1985/Windshaft.git"
-    }],
-    "author": {
-      "name": "Simon Tokumine, Javier Santana, Vizzuality, Brian Hare",
-      "url": "http://www.brianhare.com",
-      "email": "brian@brianhare.com"
+        "url": "git://github.com/BHare1985/Windwalker.git"
     },
+    "license": "BSD-4-Clause",
+    "licenses": [{
+        "type": "BSD",
+        "url": "https://github.com/BHare1985/Windwalker/blob/master/LICENCE"
+    }],
+    "author": { "name": "Brian Hare" },
+    "contributors": [
+		{ "name": "Simon Tokumine" },
+		{ "name": "Javier Santana" }
+    ],
     "dependencies": {
-	"underscore"  : "1.1.x",
-	"step": "0.0.x",
-	"grainstore": "https://github.com/BHare1985/grainstore/tarball/master",
-	"generic-pool": "1.0.x",
-	"express": "2.4.3",
-	"tilelive": "5.7.1",
-	"tilelive-mapnik": "0.6.16"
+        "underscore"  : "1.1.7",
+        "step": "0.0.6",
+        "grainstore": "https://github.com/BHare1985/grainstore/tarball/1.1.0-hare2",
+  		"generic-pool": "1.0.12",
+        "express": "2.4.3",
+        "qs": "5.2.0",
+        "compression": "1.5.2",
+        "tilelive": "5.8.2",
+        "tilelive-mapnik": "0.6.17"
     },
     "devDependencies": {
 		"mocha": "2.2.5"
     },
     "scripts": {
-        "test": "mocha test/acceptance/*.js test/unit/*.js",
-        "start": "node deploy/server.js"
+        "test": "mocha test/acceptance/*.js test/unit/*.js"
     }
 }

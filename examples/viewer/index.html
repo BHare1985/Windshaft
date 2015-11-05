@@ -6,13 +6,14 @@
   <link href='wax/dist/controls.css' rel='stylesheet' type='text/css'>
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
   <script src='wax/dist/wax.g.js' type='text/javascript'></script>
-   <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+   <script src="underscore-min.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
   <script>
-	var texas = new google.maps.LatLng(39.816975, -86.198730);
+	var center = new google.maps.LatLng(40.417874374140474, -3.69964599609375);
+	var interaction;
 	$(document).ready(function(){
 		var map = setupMap();
-		var baseURL = "http://localhost:4000/database/<%= dbname %>/table/<%= table %>/{z}/{x}/{y}";
+		var baseURL = "http://localhost:4000/<%= dbname %>/tiles/<%= table %>/{z}/{x}/{y}";
 		var layers = [];
 		
 		var tilejson = {
@@ -23,7 +24,6 @@
 			formatter: function(options, data) { return JSON.stringify(data).split("\n").join("<br />"); }
 		};
 
-
 		$('#update_map').click(function(ev){
 			ev.preventDefault();
 
@@ -32,25 +32,29 @@
 			var sql = $('#sql').val();
 			var style = encodeURIComponent($('#style').val());
 			
-			
 			var url = _.template(baseURL, {dbname: dbname, table: table});
 
 			tilejson.tiles = [url + '.png' + '?sql='+sql+'&style='+style];
 			tilejson.grids = [url + '.grid.json' + '?sql='+sql+'&style='+style];
 
 			map.overlayMapTypes.clear();
+			if(interaction)
+			interaction.remove();
 			
 			var testMap = new wax.g.connector(tilejson);
 			map.overlayMapTypes.push(testMap);
-			wax.g.interaction().map(map).tilejson(tilejson).on(wax.tooltip().parent(map.getDiv()).events());
+			interaction = wax.g.interaction().map(map).tilejson(tilejson).on(wax.tooltip().parent(map.getDiv()).events());
 		});
+		
+		//$('#update_map').click();
+		//setTimeout('window.location.href=window.location.href;', 30000);
 	});
 
 function setupMap() {
 
 	var mapOptions = {
-		center: texas,
-		zoom: 8,
+		center: center,
+		zoom: 13,
 		mapTypeControl: true,
 		mapTypeControlOptions: {
 			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
@@ -81,11 +85,11 @@ function setupMap() {
 </script>
 </head>
 <body>
-	<input type="text" value="windshaft_test" id="dbname">
-	<input type="text" value="test_table" id="table">
-	<input type="text" value="" id="sql">
-	<input type="text" value="" id="style">
+	DB: <input type="text" value="windwalker_test" id="dbname">
+	Table: <input type="text" value="test_table" id="table">
+	Sql: <input type="text" value="SELECT * FROM test_table" id="sql"><br>
+	Style: <textarea id="style" style='margin: 0px;width: 567px; height: 58px;'>::point {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}</textarea>
 	<input type="button" id="update_map" value="Go">
-	<div id="map" style="width: 1500px; height: 900px"></div>
+	<div id="map" style="width: 768px; height: 768px"></div>
 </body>
 </html>

@@ -1,11 +1,11 @@
 --
--- Windshaft test database
+-- Windwalker test database
 -- 
 -- To use:
 -- 
--- > dropdb -Upostgres -hlocalhost windshaft_test
--- > createdb -Upostgres -hlocalhost -Ttemplate_postgis -Opostgres -EUTF8 windshaft_test
--- > psql -Upostgres -hlocalhost windshaft_test < windshaft.test.sql
+-- > dropdb -Upostgres -hlocalhost windwalker_test
+-- > createdb -Upostgres -hlocalhost -Ttemplate_postgis -Opostgres -EUTF8 windwalker_test
+-- > psql -Upostgres -hlocalhost windwalker_test < windwalker.test.sql
 --
 -- NOTE: requires a postgis template called template_postgis
 --

@@ -1,4 +1,4 @@
-USE [windshaft_test]
+USE [windwalker_test]
 GO
 
 DROP TABLE [dbo].[test_table]

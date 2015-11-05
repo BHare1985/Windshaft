@@ -1,1 +1,1 @@
-module.exports.oneDay   = 86400000;
+module.exports.enableCors   = true;

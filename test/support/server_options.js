@@ -4,11 +4,15 @@ module.exports = function(opts) {
     
     var config = {
 		dbtype: global.environment.dbtype,
-        base_url: '/database/:dbname/table/:table',
+        tileRoute: '/database/:dbname/table/:table/:z/:x/:y.*',
         grainstore: {datasource: global.environment.datasource},
-        enable_cors: global.environment.enable_cors,
+        enableCors: global.settings.enableCors,
         unbuffered_logging: true, // for smoother teardown from tests
-        req2params: function(req, callback){
+        logRequests: true,
+        logErrors: true,
+        logErrorTrace: true,
+        showErrors: true,
+        parameterParser: function(req, callback){
 
             // no default interactivity. to enable specify the database column you'd like to interact with
             req.params.interactivity = null;

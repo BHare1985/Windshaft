@@ -3,7 +3,7 @@ var   _             = require('underscore')
     , th            = require('../support/test_helper.js')
     , assert        = require('assert')
     , grainstore    = require('grainstore')
-    , RenderCache   = require('../../lib/windshaft/render_cache.js')
+    , RenderCache   = require('../../lib/render_cache.js')
     , serverOptions = require('../support/server_options')
     , tests         = module.exports = {};
 
@@ -26,7 +26,7 @@ function getDefaults(params) {
     
     return {
         dbtype: serverOptions.dbtype,
-        dbname: 'windshaft_test',
+        dbname: 'windwalker_test',
         table: params.table,
         style: default_style(params),
         sql: default_sql(params),
@@ -62,7 +62,7 @@ suite('render_cache', function() {
          _.defaults(req.params, getDefaults(req.params));
         delete req.params.style;
         
-        assert.equal(render_cache.createKey(req.params), 'windshaft_test:test_table:png:point:select *::');
+        assert.equal(render_cache.createKey(req.params), 'windwalker_test:test_table:png:point:select *::');
         done();
     });
 
@@ -79,7 +79,7 @@ suite('render_cache', function() {
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            assert.equal(renderer._uri.query.base.split(':')[0], 'windshaft_test');
+            assert.equal(renderer._uri.query.base.split(':')[0], 'windwalker_test');
             done();
         });
     });

@@ -4,12 +4,12 @@
 // If you want to get something running quickly, follow the instructions for a seed DB in test/windshaft.test.sql
 
 
-var Windshaft = require('../lib/windshaft');
+var Windshaft = require('../lib');
 var _         = require('underscore');
 var config = {
 	dbtype: 'mssql',
 	geom_type: 'polygon',
-    base_url: '/:dbname/tiles/:table',
+    tileRoute: '/:dbname/tiles/:table/:z/:x/:y.*',
     grainstore: {
 		map: {srid: 3857},
 		datasource: {
@@ -25,10 +25,9 @@ var config = {
 			 polygon: "::line {line-color: red; line-width: 4; line-join: round; line-cap: round;}",  
 		},
     },
-    enable_cors: true,
-    req2params: function(req, callback){
+    enableCors: true,
+    parameterParser: function(req, callback){
 
-        // no default interactivity. to enable specify the database column you'd like to interact with
         req.params.interactivity = 'name';
 
         _.extend(req.params, req.query);
@@ -42,4 +41,4 @@ var config = {
 var ws = new Windshaft.Server(config);
 ws.listen(4000);
 
-console.log("map tiles are now being served out of: http://localhost:4000" + config.base_url + '/:z/:x/:y');
+console.log("map tiles are now being served out of: http://localhost:4000" + config.tileRoute);

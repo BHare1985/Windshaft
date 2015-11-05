@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var Windshaft = require('../../lib/windshaft');
+var Windwalker = require('../../lib');
 
 
 // sanity check
@@ -16,7 +16,7 @@ global.environment  = require('../../config/environments/' + ENV);
 _.extend(global.settings, global.environment);
 
 var ServerOptions = require('../support/server_options.js');
-var server = new Windshaft.Server(ServerOptions);
+var server = new Windwalker.Server(ServerOptions);
 
-server.listen(global.environment.windshaft_port);
-console.log("Windshaft tileserver started on port " + global.environment.windshaft_port);
+server.listen(global.environment.windwalkerPort);
+console.log("Windwalker tileserver started on port " + global.environment.windwalkerPort);
