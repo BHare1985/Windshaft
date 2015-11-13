@@ -1,4 +1,4 @@
-#Windwalker 0.0.1
+#Windwalker 0.0.2
 
 
 Install Node 0.12:  
