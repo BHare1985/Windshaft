@@ -27,7 +27,7 @@ suite('windwalker', function() {
         assert.throws(
             function(){
                 var ws = new Windwalker.Server({unbuffered_logging:true});
-            }, /Must initialise Windwalker with a database type and tileRoute/
+            }, /Must initialise Windwalker with a database type/
         );
     });
 

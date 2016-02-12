@@ -1,6 +1,6 @@
 {
     "name": "windwalker",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "main": "./lib/index.js",
     "description": "A Node.js based map tile server using Mapnik",
     "url": "https://github.com/BHare1985/Windwalker",
@@ -27,7 +27,8 @@
         "qs": "5.2.0",
         "compression": "1.5.2",
         "tilelive": "5.8.2",
-        "tilelive-mapnik": "0.6.17"
+        "tilelive-mapnik": "0.6.17",
+        "mapnik": "3.4.5"
     },
     "devDependencies": {
 		"mocha": "2.2.5"
