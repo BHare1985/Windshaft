@@ -19,6 +19,7 @@
 		{ "name": "Javier Santana" }
     ],
     "dependencies": {
+        "lodash"  : "4.4.0",
         "underscore"  : "1.1.7",
         "step": "0.0.6",
         "grainstore": "https://github.com/BHare1985/grainstore/tarball/1.1.0-hare2",
