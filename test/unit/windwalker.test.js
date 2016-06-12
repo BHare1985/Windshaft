@@ -18,15 +18,15 @@ suite('windwalker', function() {
 
     test('can spawn a new server on the global listen port',  function(){
         var ws = new Windwalker.Server(serverOptions);
-        ws.listen(global.environment.windwalkerPort);
+        var listener = ws.listen(global.environment.windwalkerPort);
         assert.ok(ws);
-        ws.close(); /* allow proper tear down */
+        listener.close();
     });
 
     test('throws exception if incorrect options passed in',  function(){
         assert.throws(
             function(){
-                var ws = new Windwalker.Server({unbuffered_logging:true});
+                var ws = new Windwalker.Server({a:true});
             }, /Must initialise Windwalker with a database type/
         );
     });

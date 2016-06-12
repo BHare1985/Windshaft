@@ -7,7 +7,6 @@ module.exports = function(opts) {
         tileRoute: '/database/:dbname/table/:table/:z/:x/:y.*',
         grainstore: {datasource: global.environment.datasource},
         enableCors: global.settings.enableCors,
-        unbuffered_logging: true, // for smoother teardown from tests
         logRequests: true,
         logErrors: true,
         logErrorTrace: true,

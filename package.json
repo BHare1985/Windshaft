@@ -1,40 +1,49 @@
 {
-    "name": "windwalker",
-    "version": "0.0.3",
-    "main": "./lib/index.js",
-    "description": "A Node.js based map tile server using Mapnik",
-    "url": "https://github.com/BHare1985/Windwalker",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/BHare1985/Windwalker.git"
-    },
-    "license": "BSD-4-Clause",
-    "licenses": [{
-        "type": "BSD",
-        "url": "https://github.com/BHare1985/Windwalker/blob/master/LICENCE"
-    }],
-    "author": { "name": "Brian Hare" },
-    "contributors": [
-		{ "name": "Simon Tokumine" },
-		{ "name": "Javier Santana" }
-    ],
-    "dependencies": {
-        "lodash"  : "4.4.0",
-        "underscore"  : "1.1.7",
-        "step": "0.0.6",
-        "grainstore": "https://github.com/BHare1985/grainstore/tarball/1.1.0-hare2",
-  		"generic-pool": "1.0.12",
-        "express": "2.4.3",
-        "qs": "5.2.0",
-        "compression": "1.5.2",
-        "tilelive": "5.8.2",
-        "tilelive-mapnik": "0.6.17",
-        "mapnik": "3.4.5"
-    },
-    "devDependencies": {
-		"mocha": "2.2.5"
-    },
-    "scripts": {
-        "test": "mocha test/acceptance/*.js test/unit/*.js"
+  "name": "windwalker",
+  "version": "0.1.0",
+  "main": "./lib/index.js",
+  "description": "A Node.js based map tile server using Mapnik",
+  "url": "https://github.com/BHare1985/Windwalker",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/BHare1985/Windwalker.git"
+  },
+  "license": "BSD-4-Clause",
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "https://github.com/BHare1985/Windwalker/blob/master/LICENCE"
     }
+  ],
+  "author": {
+    "name": "Brian Hare"
+  },
+  "contributors": [
+    {
+      "name": "Simon Tokumine"
+    },
+    {
+      "name": "Javier Santana"
+    }
+  ],
+  "dependencies": {
+    "compression": "1.5.2",
+    "express": "4.13.4",
+    "generic-pool": "1.0.12",
+    "grainstore": "https://github.com/BHare1985/grainstore/tarball/1.1.0-hare2",
+    "lodash": "4.4.0",
+    "mapnik": "3.4.5",
+    "morgan": "1.7.0",
+    "qs": "5.2.0",
+    "step": "0.0.6",
+    "tilelive": "5.8.2",
+    "tilelive-mapnik": "0.6.17",
+    "underscore": "1.1.7"
+  },
+  "devDependencies": {
+    "mocha": "2.2.5"
+  },
+  "scripts": {
+    "test": "mocha test/acceptance/*.js test/unit/*.js"
+  }
 }

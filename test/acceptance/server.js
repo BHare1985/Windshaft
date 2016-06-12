@@ -10,17 +10,16 @@ var   assert        = require('../support/assert')
 
 
 var server;
-
+var listener;
 suite('server', function() {
 
 	suiteSetup(function() {
 		server = new Windwalker.Server(ServerOptions);
-		server.setMaxListeners(0);
+		listener = server.listen(8080);
 	});
 
-
 	suiteTeardown(function() {
-		server.close();
+		listener.close();
 	});
 
     test("get call to server returns 200",  function(done){
