@@ -29,6 +29,7 @@
   "dependencies": {
     "express": "4.13.4",
     "generic-pool": "1.0.12",
+    "grainstore": "https://github.com/BHare1985/grainstore/tarball/1.2.0-hare",
     "lodash": "4.4.0",
     "mapnik": "3.4.5",
     "qs": "5.2.0",
