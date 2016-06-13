@@ -34,7 +34,7 @@ module.exports = function(opts) {
         }
 
     }
-
+    
     _.extend(config,  opts || {});
  
     return config;

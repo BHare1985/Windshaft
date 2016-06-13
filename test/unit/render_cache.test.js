@@ -10,26 +10,24 @@ var   _             = require('underscore')
 
 function getDefaults(params) {
 
-    if(!params.table)
-        params.table = "test_table";
+    if(!params.mapKey)
+        params.mapKey = "uniqueMapKey";
         
     var def_style_point = " {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}";		
     var def_style_line = " {line-color:#FF6600; line-width:1; line-opacity: 0.7;}";		
     var def_style_poly = " {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}";		
     
     var default_style = _.template(	
-        '#<%= table %>[mapnik-geometry-type=1]' + def_style_point +		
-        '#<%= table %>[mapnik-geometry-type=2]' + def_style_line +		
-        '#<%= table %>[mapnik-geometry-type=3]' + def_style_poly);
+        '#<%= mapKey %>[mapnik-geometry-type=1]' + def_style_point +		
+        '#<%= mapKey %>[mapnik-geometry-type=2]' + def_style_line +		
+        '#<%= mapKey %>[mapnik-geometry-type=3]' + def_style_poly);
 
-    var default_sql = _.template("<%= table %>");
     
     return {
         dbtype: serverOptions.dbtype,
         dbname: 'windwalker_test',
-        table: params.table,
         style: default_style(params),
-        sql: default_sql(params),
+        sql: "(SELECT * FROM test_table) as q",
         x: 4,
         y:4,
         z:4,
@@ -62,24 +60,19 @@ suite('render_cache', function() {
          _.defaults(req.params, getDefaults(req.params));
         delete req.params.style;
         
-        assert.equal(render_cache.createKey(req.params), 'windwalker_test:test_table:png:point:select *::');
+        assert.equal(render_cache.createKey(req.params), 'uniqueMapKey:windwalker_test:png:point:select *::');
         done();
     });
-
-    /**
-     * THE FOLLOWING TESTS NEED SOME DB SETUP
-     * They need a database setup as below with the table test_table defined
-     */
 
     test('render_cache can generate a tilelive object', function(done){
         var render_cache = new RenderCache(1000, mml_store);
         
-         var req = {params:{}};
+         var req = {params: {}};
          _.defaults(req.params, getDefaults(req.params));
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            assert.equal(renderer._uri.query.base.split(':')[0], 'windwalker_test');
+            assert.equal(renderer._uri.query.base.split(':')[0], 'uniqueMapKey');
             done();
         });
     });
@@ -92,7 +85,7 @@ suite('render_cache', function() {
         
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            req = {params: {table: 'test_table_2' }};
+            req = {params: {sql: '(select * FROM test_table_2) as q' }};
             _.defaults(req.params, getDefaults(req.params));
             render_cache.getRenderer(req, function(err, renderer2){
                 assert.equal(_.keys(render_cache.renderers).length, 2);
@@ -124,7 +117,7 @@ suite('render_cache', function() {
         
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            var req = {params: { sql: "(SELECT * FROM test_table) as q" }};
+            var req = {params: { sql: "(SELECT * FROM test_table_2) as q" }};
             _.defaults(req.params, getDefaults(req.params));
             render_cache.getRenderer(req, function(err, renderer){
                 assert.equal(_.keys(render_cache.renderers).length, 2);
@@ -143,21 +136,21 @@ suite('render_cache', function() {
 
         var req = {params: { }};
         _.defaults(req.params, getDefaults(req.params));
-        
+        req.params.mapKey = 'key2';
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            req.params.sql = "(SELECT * FROM test_table) as q";
+            req.params.mapKey = 'key1';
+            req.params.sql = "(SELECT * FROM test_table) as q2";
             render_cache.getRenderer(req, function(err, renderer){
 				assert.ok(renderer, err);
-                req.params.sql = "(SELECT * FROM test_table) as q2";
-                req.params.table = 'test_table_2';
-
+				req.params.mapKey = 'key1';
+                req.params.sql = "(SELECT * FROM test_table) as q3";
+                
                 render_cache.getRenderer(req, function(err, renderer){
 					assert.ok(renderer, err);
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
-                    req.params.table = 'test_table';
                     render_cache.reset(req);
 
                     assert.equal(_.keys(render_cache.renderers).length, 1);
@@ -177,16 +170,16 @@ suite('render_cache', function() {
 
         render_cache.getRenderer(req, function(err, renderer){
             assert.ok(renderer, err);
-            req.params.sql = "(SELECT * FROM test_table) as q";
+            req.params.sql = "(SELECT * FROM test_table) as q2";
 
             render_cache.getRenderer(req, function(err, renderer){
-            req.params.sql = "(SELECT * FROM test_table) as q2";
-                req.params.table = 'test_table_2';
+            req.params.sql = "(SELECT * FROM test_table) as q3";
+                req.params.mapKey = 'key2';
 
                 render_cache.getRenderer(req, function(err, renderer){
                     assert.equal(_.keys(render_cache.renderers).length, 3);
 
-                    req.params.table = 'test_table';
+                    req.params.mapKey = 'key3';
                     render_cache.purge();
 
                     assert.equal(_.keys(render_cache.renderers).length, 0);

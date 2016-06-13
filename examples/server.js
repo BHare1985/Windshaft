@@ -26,16 +26,9 @@ var config = {
 		},
     },
     showErrors: true,
-    enableCors: true,
-    parameterParser: function(req, callback){
-
-        req.params.interactivity = 'name';
-
-        _.extend(req.params, req.query);
-
-        // send the finished req object on
-        callback(null,req);
-    }
+    logErrors: true,
+    logErrorTrace: true,
+    enableCors: true
 };
 
 // Initialize with configuration and get back express4 server object
@@ -81,9 +74,27 @@ app.parameterParser = function(req, callback){
     // field to be name so it popups on the map
     req.params.interactivity = 'name';
 
+
     // Convert every query variable to a request parameter (sql, style, table, etc)
     _.extend(req.params, req.query);
 
+
+    if(!req.query.sql) {
+        req.params.layers = [
+            {
+                id: "carto1",
+                sql: "SELECT * FROM test_table WHERE [cartodb_id] = 1",
+                interactivity: "name,cartodb_id"
+            },{
+                id: "carto2",
+                sql: "SELECT * FROM test_table WHERE [cartodb_id] = 2",
+                interactivity: "address,cartodb_id"
+            }
+        ];
+
+    }
+    
+    
     // send the finished req object on
     callback(null,req);
 };
