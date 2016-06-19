@@ -6,7 +6,7 @@ module.exports = function(opts) {
 		dbtype: global.environment.dbtype,
         tileRoute: '/database/:dbname/table/:table/:z/:x/:y.*',
         grainstore: {datasource: global.environment.datasource},
-        enableCors: global.settings.enableCors,
+        enableCors: false,
         logRequests: true,
         logErrors: true,
         logErrorTrace: true,

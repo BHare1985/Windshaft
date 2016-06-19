@@ -1,4 +1,5 @@
-var   assert        = require('../support/assert')
+var   assertHTTP    = require('assert-http')
+    , assert        = assertHTTP.assert
     , tests         = module.exports = {}
     , _             = require('underscore')
     , querystring   = require('querystring')
@@ -9,68 +10,62 @@ var   assert        = require('../support/assert')
     , http          = require('http');
 
 
-var server;
-var listener;
 suite('server', function() {
-
+    var listener;
+    
 	suiteSetup(function() {
-		server = new Windwalker.Server(ServerOptions);
-		listener = server.listen(8080);
+		var server = new Windwalker.Server(ServerOptions);
+		listener = server.listen(global.environment.windwalkerPort);
 	});
 
 	suiteTeardown(function() {
 		listener.close();
 	});
 
-    test("get call to server returns 200",  function(done){
-        assert.response(server, {
-            url: '/',
-            method: 'GET'
-        },{
+
+    test('get call to server returns 200', function(done) {
+        assert.response({
+            path: '/',
+            port: global.environment.windwalkerPort,
+        }, {
             status: 200
-        }, function() { done(); } );
+        }, function(err, res) {
+            assert.ifError(err);
+            done();
+        });
     });
 
-    test("get call to server returns 200",  function(done){
-        assert.response(server, {
-            url: '/',
-            method: 'GET'
-        },{
-            status: 200
-        }, function() { done(); } );
-    });
-
-/*
-    test.only("get'ing a tile with default style should return an expected tile",  function(done){
-        assert.response(server, {
+    test("get'ing a tile with default style should return an expected tile",  function(done){
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/13/4011/3088.png',
-            method: 'GET',
-            encoding: 'binary'
+            encoding: 'binary',
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png',  function(err, similarity) {
+        }, function(err, res){
+            if (err) throw err;
+            assertHTTP.imageEquals(new Buffer(res.body, 'binary'), fs.readFileSync('./test/fixtures/test_table_13_4011_3088.png'), null, function(err) {
                 if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png");
                 done();
             });
         });
     });
 
     test("get'ing a tile with default style and sql should return a constrained tile",  function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"});
-        assert.response(server, {
+        var sql = querystring.stringify({sql: "SELECT TOP 2 * FROM test_table"});
+        
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + sql,
-            method: 'GET',
-            encoding: 'binary'
+            encoding: 'binary',
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_limit_2.png',  function(err, similarity) {
+        }, function(err, res){
+            if (err) throw err;
+            assertHTTP.imageEquals(new Buffer(res.body, 'binary'), fs.readFileSync('./test/fixtures/test_table_13_4011_3088_limit_2.png'), null, function(err) {
                 if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png");
                 done();
             });
         });
@@ -78,17 +73,17 @@ suite('server', function() {
 
     test("get'ing a tile with url specified style should return an expected tile",  function(done){
         var style = querystring.stringify({style: "#test_table{marker-fill: blue;marker-line-color: black;}"});
-        assert.response(server, {
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
+            encoding: 'binary',
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled.png',  function(err, similarity) {
+        }, function(err, res){
+            if (err) throw err;
+            assertHTTP.imageEquals(new Buffer(res.body, 'binary'), fs.readFileSync('./test/fixtures/test_table_13_4011_3088_styled.png'), null, function(err) {
                 if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
                 done();
             });
         });
@@ -96,65 +91,57 @@ suite('server', function() {
 
     test("get'ing a tile with url specified style should return an expected tile twice",  function(done){
         var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
-        assert.response(server, {
+        
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
+            encoding: 'binary',
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
+        }, function(err, res){
+            if (err) throw err;
+            assertHTTP.imageEquals(new Buffer(res.body, 'binary'), fs.readFileSync('./test/fixtures/test_table_13_4011_3088_styled_black.png'), null, function(err) {
                 if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png"); // TODO: isn't this a duplication ?
                 done();
             });
         });
     });
 
     test("dynamically set styles in same session and then back to default",  function(done){
-        var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
-        assert.response(server, {
-            url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + style,
-            method: 'GET',
-            encoding: 'binary'
+        assert.response({
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"}),
+            encoding: 'binary',
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: { 'Content-Type': 'image/png' }
-        }, function(res){
-        
-			//fs.writeFile("/tmp/1.png", res.body, function(err) { if(err) { return console.log(err); }});
-
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
+        }, function(err, res){
+            if (err) throw err;
+            assertHTTP.imageEquals(new Buffer(res.body, 'binary'), fs.readFileSync('./test/fixtures/test_table_13_4011_3088_styled_black.png'), null, function(err) {
                 if (err) throw err;
-                assert.deepEqual(res.headers['content-type'], "image/png");
-
-                // second style
-                var style = querystring.stringify({style: "#test_table{marker-fill: black;marker-line-color: black;}"});
-                assert.response(server, {
-                    url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?' + style,
-                    method: 'GET',
-                    encoding: 'binary'
+                assert.response({
+                    url: '/database/Windwalker_test/table/test_table/13/4011/3088.png?'  + querystring.stringify({style: "#test_table{marker-fill: blue;marker-line-color: black;}"}),
+                    encoding: 'binary',
+                    port: global.environment.windwalkerPort
                 },{
                     status: 200,
                     headers: { 'Content-Type': 'image/png' }
-                }, function(res){
-                    assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088_styled_black.png',  function(err, similarity) {
+                }, function(err, res){
+                    if (err) throw err;
+                    assertHTTP.imageEquals(new Buffer(res.body, 'binary'), fs.readFileSync('./test/fixtures/test_table_13_4011_3088_styled.png'), null, function(err) {
                         if (err) throw err;
-                        assert.deepEqual(res.headers['content-type'], "image/png");
-
-                        //back to default
-                        assert.response(server, {
+                        assert.response({
                             url: '/database/Windwalker_test/table/test_table/13/4011/3088.png',
-                            method: 'GET',
-                            encoding: 'binary'
+                            encoding: 'binary',
+                            port: global.environment.windwalkerPort
                         },{
                             status: 200,
                             headers: { 'Content-Type': 'image/png' }
-                        }, function(res){
-                            assert.imageEqualsFile(res.body, './test/fixtures/test_table_13_4011_3088.png',  function(err, similarity) {
+                        }, function(err, res){
+                            if (err) throw err;
+                            assertHTTP.imageEquals(new Buffer(res.body, 'binary'), fs.readFileSync('./test/fixtures/test_table_13_4011_3088.png'), null, function(err) {
                                 if (err) throw err;
-                                assert.deepEqual(res.headers['content-type'], "image/png");
                                 done();
                             });
                         });
@@ -164,45 +151,29 @@ suite('server', function() {
         });
     });
 
-	
-	/*
-	Implement this someday
-    test.("get'ing a json with default style should return an grid",  function(done){
-        assert.response(server, {
-            url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
-        }, function(res){
-            var expected_json = JSON.parse(fs.readFileSync('./test/fixtures/test_table_13_4011_3088.grid.json','utf8'));
-            assert.deepEqual(JSON.parse(res.body), expected_json);
-            done();
-        });
-    });
-	*/
-
     test("get'ing a json with default style and nointeractivity should return error",  function(done){
-        assert.response(server, {
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json',
-            method: 'GET'
+            port: global.environment.windwalkerPort
         },{
             status: 500,
-        }, function(res){
+        }, function(err, res){
+            if (err) throw err;
             assert.deepEqual(res.body, 'Tileset has no interactivity');
             done();
         });
     });
-    
 
     test("get'ing a json with default style and single interactivity should return a grid",  function(done){
-        assert.response(server, {
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json?interactivity=name',
-            method: 'GET'
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: { 'Content-Type': 'application/json; charset=utf-8' }
-        }, function(res){
+        }, function(err, res){
+            if (err) throw err;
+
             var expected_json = {
                 "1":{"name":"Hawai"},
                 "2":{"name":"El Estocolmo"},
@@ -216,13 +187,15 @@ suite('server', function() {
     });
 
     test("get'ing a json with default style and multiple interactivity should return a grid",  function(done){
-        assert.response(server, {
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json?interactivity=name,address',
-            method: 'GET'
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: { 'Content-Type': 'application/json; charset=utf-8' }
-        }, function(res){
+        }, function(err,res){
+            if (err) throw err;
+
             var expected_json = {
                 "1":{"address":"Calle de Pérez Galdós 9, Madrid, Spain","name":"Hawai"},
                 "2":{"address":"Calle de la Palma 72, Madrid, Spain","name":"El Estocolmo"},
@@ -235,29 +208,26 @@ suite('server', function() {
         });
     });
 
-/*
-
-verified working, but isnt made for interactivity=name
 
     test("get'ing a json with default style and sql should return a constrained grid",  function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM test_table limit 2"})
-		assert.response(server, {
-            url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json?interactivity=name&' + sql,
-            method: 'GET'
+		assert.response({
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.grid.json?' + querystring.stringify({interactivity: "name", sql: "SELECT TOP 2 * FROM test_table"}),
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: { 'Content-Type': 'application/json; charset=utf-8' }
-        }, function(res){
+        }, function(err,res){
+            if (err) throw err;
             var expected_json = JSON.parse(fs.readFileSync('./test/fixtures/test_table_13_4011_3088_limit_2.grid.json','utf8'));
             assert.deepEqual(JSON.parse(res.body), expected_json);
             done();
         });
     });
-*/
+
     test("get'ing a tile with CORS enabled should return CORS headers",  function(done){
-        assert.response(server, {
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/6/31/24.png',
-            method: 'GET'
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: {'Access-Control-Allow-Headers': 'X-Requested-With', 'Access-Control-Allow-Origin': '*'}
@@ -265,9 +235,9 @@ verified working, but isnt made for interactivity=name
     });
 
     test("beforeTileRender is called when the client request a tile",  function(done) {
-        assert.response(server, {
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/6/31/24.png',
-            method: 'GET'
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: {'X-BeforeTileRender': 'called'}
@@ -275,9 +245,9 @@ verified working, but isnt made for interactivity=name
     });
 
     test("afterTileRender is called when the client request a tile",  function(done) {
-        assert.response(server, {
+        assert.response({
             url: '/database/Windwalker_test/table/test_table/6/31/24.png',
-            method: 'GET'
+            port: global.environment.windwalkerPort
         },{
             status: 200,
             headers: {'X-AfterTileRender': 'called', 'X-AfterTileRender2': 'called'}
@@ -286,13 +256,12 @@ verified working, but isnt made for interactivity=name
     
 	test("Database errors are sent in response body",  function(done) {
 		var sql = querystring.stringify({sql: "BROKEN QUERY"})
-		assert.response(server, {
+		assert.response({
 			url: '/database/Windwalker_test/table/test_table/6/31/24.png?' + sql,
-			method: 'GET'
+            port: global.environment.windwalkerPort
 		},{
 			status: 500
-		}, function(res) {
-		  // TODO: actual error may depend on backend language localization
+		}, function(err, res) {
 		  assert.ok(res.body.match(new RegExp(/syntax/)),
 			  'Body does not contain the "syntax error" message: ' + res.body);
 		  done();
