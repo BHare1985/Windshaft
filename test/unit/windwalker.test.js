@@ -37,4 +37,23 @@ suite('windwalker', function() {
         assert.equal(ws.tileRoute, '/database/:dbname/table/:table/:z/:x/:y.*');
     });
 
+    test('default options are set',  function(){
+        var ws = new Windwalker.Server(serverOptions);
+        assert.equal(ws.jsonp, true);
+        assert.deepEqual(ws.gridFileExtensions, ['grid.json', 'json', 'js', 'jsonp']);
+    });
+    
+    test('jsonp gets set', function(){
+        var value = false;
+        var ws = new Windwalker.Server(_.extend(serverOptions, {jsonp: value}));
+        assert.equal(ws.jsonp, value);
+    });
+
+    test('gridFileExtensions gets set', function(){
+        var value = ['json'];
+        var ws = new Windwalker.Server(_.extend(serverOptions, {gridFileExtensions: value}));
+        assert.deepEqual(ws.gridFileExtensions, value);
+    });
+    
+
 });
