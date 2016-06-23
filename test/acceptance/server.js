@@ -10,6 +10,8 @@ var   assertHTTP    = require('assert-http')
     , http          = require('http');
 
 
+
+
 suite('server', function() {
     var listener;
     
@@ -267,5 +269,51 @@ suite('server', function() {
 		  done();
 		});
 	});
+});
+
+
+
+suite('customEvents', function() {
+    var listener;
+    
+	suiteSetup(function() {
+        var config = _.extend(ServerOptions, {
+             beforeTileRender: function(req, res, callback) {
+                res.header('X-BeforeTileRender', 'called');
+                callback(null);
+            },
+            afterTileRender: function(req, res, tile, headers, callback) {
+                res.header('X-AfterTileRender','called');
+                headers['X-AfterTileRender2'] = 'called';
+                callback(null, tile, headers);
+            }
+        });
+		var server = new Windwalker.Server(config);
+		listener = server.listen(global.environment.windwalkerPort);
+	});
+
+	suiteTeardown(function() {
+		listener.close();
+	});
+	
+    test("beforeTileRender is called when the client request a tile",  function(done) {
+        assert.response({
+            url: '/database/Windwalker_test/table/test_table/6/31/24.png',
+            port: global.environment.windwalkerPort
+        },{
+            status: 200,
+            headers: {'X-BeforeTileRender': 'called'}
+        }, function() { done(); });
+    });
+
+    test("afterTileRender is called when the client request a tile",  function(done) {
+        assert.response({
+            url: '/database/Windwalker_test/table/test_table/6/31/24.png',
+            port: global.environment.windwalkerPort
+        },{
+            status: 200,
+            headers: {'X-AfterTileRender': 'called', 'X-AfterTileRender2': 'called'}
+        }, function() { done(); });
+    });
 });
 
