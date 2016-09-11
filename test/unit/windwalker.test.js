@@ -2,7 +2,7 @@ var   _             = require('underscore')
     , th            = require('../support/test_helper.js')
     , assert        = require('assert')
     , Windwalker     = require('../../lib')
-    , serverOptions = require('../support/server_options')
+    , serverOptions = require('../support/server_options')("database")
     , tests         = module.exports = {};
 
 suite('windwalker', function() {
@@ -23,14 +23,23 @@ suite('windwalker', function() {
         listener.close();
     });
 
-    test('throws exception if incorrect options passed in',  function(){
+    test('datasource is database if not specified',  function(){
+        var ws = new Windwalker.Server({dbtype: "banana"});
+        assert.equal(ws.datasource, 'database');
+    });
+    
+    test('throws exception if incorrect options passed in for database',  function(){
         assert.throws(
             function(){
-                var ws = new Windwalker.Server({a:true});
+                var ws = new Windwalker.Server({datasource: "database"});
             }, /Must initialise Windwalker with a database type/
         );
     });
 
+    test('dbtype not required if datasource is not database',  function(){
+        var ws = new Windwalker.Server({datasource: "shape"});
+    });
+    
     test('options are set on main windwalker object',  function(){
         var ws = new Windwalker.Server(serverOptions);
         assert.ok(_.isFunction(ws.parameterParser));
