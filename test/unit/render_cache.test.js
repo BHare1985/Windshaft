@@ -1,12 +1,12 @@
 var   _             = require('underscore')
     , sys           = require('util')
+    , path          = require('path')
     , th            = require('../support/test_helper.js')
     , assert        = require('assert')
     , grainstore    = require('grainstore')
     , RenderCache   = require('../../lib/render_cache.js')
-    , serverOptions = require('../support/server_options')
+    , serverOptions = require('../support/server_options')("database")
     , tests         = module.exports = {};
-
 
 function getDefaults(params) {
 
@@ -24,6 +24,7 @@ function getDefaults(params) {
 
     
     return {
+        datasource: 'database',
         dbtype: serverOptions.dbtype,
         dbname: 'windwalker_test',
         style: default_style(params),
@@ -40,8 +41,6 @@ suite('render_cache', function() {
 
 	// initialize core mml_store
 	var mml_store  = new grainstore.MMLStore(serverOptions.grainstore);
-	var mml_store  = new grainstore.MMLStore(serverOptions.grainstore);
-
 
     test('true', function(done) {
         assert.equal(global.environment.name, 'test');
@@ -53,14 +52,14 @@ suite('render_cache', function() {
         assert.ok(_.isObject(render_cache.renderers));
         done();
     });
-
+    
     test('render_cache can create a unique key from request, stripping xyz/callback', function(done){
         var render_cache = new RenderCache(1000, mml_store);
         var req = {params:{sql:"select *", geom_type:'point'}};
          _.defaults(req.params, getDefaults(req.params));
         delete req.params.style;
         
-        assert.equal(render_cache.createKey(req.params), 'uniqueMapKey:windwalker_test:png:point:select *::');
+        assert.equal(render_cache.createKey(req.params), 'uniqueMapKey:database::windwalker_test:png:point:select *::');
         done();
     });
 
@@ -77,7 +76,19 @@ suite('render_cache', function() {
         });
     });
 
+    test('render_cache can generate a tilelive object from file', function(done){
+        var render_cache = new RenderCache(1000, mml_store);
+        var req = {params: {pathname: "./test/fixtures/test_table_13_4011_3088.xml"}};
+         _.defaults(req.params, getDefaults(req.params));
 
+        render_cache.getRenderer(req, function(err, renderer){
+            assert.ok(renderer, err);
+            assert.equal(renderer._uri.xml, null);
+            assert.equal(renderer._uri.pathname, path.resolve(req.params.pathname));
+            done();
+        });
+    });
+    
     test('render_cache can generate > 1 tilelive object', function(done){
         var render_cache = new RenderCache(1000, mml_store);
         var req = {params: { }};

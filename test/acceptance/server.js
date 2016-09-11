@@ -6,17 +6,65 @@ var   assertHTTP    = require('assert-http')
     , fs            = require('fs')
     , th            = require('../support/test_helper')
     , Windwalker     = require('../../lib')
-    , ServerOptions = require('../support/server_options')
+    , DatabaseServerOptions = require('../support/server_options')("database")
+    , ShapeServerOptions = require('../support/server_options')("xmlfile")
     , http          = require('http');
 
 
 
-
-suite('server', function() {
+suite('xmlfile server', function() {
     var listener;
     
 	suiteSetup(function() {
-		var server = new Windwalker.Server(ServerOptions);
+		var server = new Windwalker.Server(ShapeServerOptions);
+		listener = server.listen(global.environment.windwalkerPort);
+	});
+
+	suiteTeardown(function() {
+		listener.close();
+	});
+   
+    test("shape file tile transparent",  function(done){
+        assert.response({
+            url: '/xmlfile/world_merc_shape.xml/0/0/0.png',
+            encoding: 'binary',
+            port: global.environment.windwalkerPort
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function(err, res){
+            if (err) throw err;
+            assertHTTP.imageEquals(new Buffer(res.body, 'binary'), fs.readFileSync('./test/fixtures/world_merc_transparent_0_0_0.png'), null, function(err) {
+                if (err) throw err;
+                done();
+            });
+        });
+    });
+    
+    test("sql server default style",  function(done){
+        assert.response({
+            url: '/xmlfile/test_table_13_4011_3088.xml/13/4011/3088.png',
+            encoding: 'binary',
+            port: global.environment.windwalkerPort
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function(err, res){
+            if (err) throw err;
+            assertHTTP.imageEquals(new Buffer(res.body, 'binary'), fs.readFileSync('./test/fixtures/test_table_13_4011_3088.png'), null, function(err) {
+                if (err) throw err;
+                done();
+            });
+        });
+    });
+});
+
+
+suite('database server', function() {
+    var listener;
+    
+	suiteSetup(function() {
+		var server = new Windwalker.Server(DatabaseServerOptions);
 		listener = server.listen(global.environment.windwalkerPort);
 	});
 
@@ -53,7 +101,7 @@ suite('server', function() {
             });
         });
     });
-
+    
     test("get'ing a tile with default style and sql should return a constrained tile",  function(done){
         var sql = querystring.stringify({sql: "SELECT TOP 2 * FROM test_table"});
         
@@ -277,7 +325,7 @@ suite('customEvents', function() {
     var listener;
     
 	suiteSetup(function() {
-        var config = _.extend(ServerOptions, {
+        var config = _.extend(DatabaseServerOptions, {
              beforeTileRender: function(req, res, callback) {
                 res.header('X-BeforeTileRender', 'called');
                 callback(null);
@@ -288,6 +336,7 @@ suite('customEvents', function() {
                 callback(null, tile, headers);
             }
         });
+        
 		var server = new Windwalker.Server(config);
 		listener = server.listen(global.environment.windwalkerPort);
 	});
