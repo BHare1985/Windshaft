@@ -29,7 +29,7 @@
     <Datasource>
        <Parameter name="user"><![CDATA[sa]]></Parameter>
        <Parameter name="password"><![CDATA[sa]]></Parameter>
-       <Parameter name="host"><![CDATA[ALIENWARE]]></Parameter>
+       <Parameter name="host"><![CDATA[localhost]]></Parameter>
        <Parameter name="port"><![CDATA[1433]]></Parameter>
        <Parameter name="type"><![CDATA[mssql]]></Parameter>
        <Parameter name="geometry_field"><![CDATA[the_geom_webmercator]]></Parameter>
