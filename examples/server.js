@@ -13,7 +13,7 @@ var config = {
     grainstore: {
 		map: {srid: 3857},
 		datasource: {
-			host: "ALIENWARE",
+			host: "localhost",
 			user: "sa",
 			password: "sa",
 			geometry_field: "the_geom",
