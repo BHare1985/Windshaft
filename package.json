@@ -1,6 +1,6 @@
 {
   "name": "windwalker",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "./lib/index.js",
   "description": "A Node.js based map tile server using Mapnik",
   "url": "https://github.com/BHare1985/Windwalker",
