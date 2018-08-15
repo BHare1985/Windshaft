@@ -126,5 +126,6 @@ app.afterTileRender = function(req, res, tile, headers, callback) {
 
 // Have the server listen on port 4000
 var listener = app.listen(4000, function(){
-    console.log("map tiles are now being served out of: http://localhost:" + listener.address().port + config.tileRoute);
+	var route = (config.tileRoute) ? config.tileRoute : "";
+    console.log("map tiles are now being served out of: http://localhost:" + listener.address().port + route);
 });
