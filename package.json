@@ -38,6 +38,10 @@
     "tilelive-mapnik": "0.6.18",
     "underscore": "1.1.7"
   },
+  "peerDependencies": {
+    "gdal": "0.9.6",
+    "tar": "4.4.0"
+  },
   "devDependencies": {
     "mocha": "2.5.3",
     "assert-http" : "1.1.4"
