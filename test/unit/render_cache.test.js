@@ -18,9 +18,9 @@ function getDefaults(params) {
     var def_style_poly = " {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}";		
     
     var default_style = _.template(	
-        '#<%= mapKey %>[mapnik-geometry-type=1]' + def_style_point +		
-        '#<%= mapKey %>[mapnik-geometry-type=2]' + def_style_line +		
-        '#<%= mapKey %>[mapnik-geometry-type=3]' + def_style_poly);
+        '#<%= mapKey %>["mapnik::geometry_type"=1]' + def_style_point +		
+        '#<%= mapKey %>["mapnik::geometry_type"=2]' + def_style_line +		
+        '#<%= mapKey %>["mapnik::geometry_type"=3]' + def_style_poly);
 
     
     return {
