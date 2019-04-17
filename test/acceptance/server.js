@@ -101,6 +101,23 @@ suite('database server', function() {
             });
         });
     });
+	
+    test.only("get'ing a tile with pbf format returns vector protobuf tile",  function(done){
+        assert.response({
+            url: '/database/Windwalker_test/table/test_table/13/4011/3088.pbf',
+            encoding: 'binary',
+            port: global.environment.windwalkerPort
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'application/x-protobuf' }
+        }, function(err, res){
+            if (err) throw err;
+            if(assertHTTP.md5(new Buffer(res.body, 'binary').toString()) !=  assertHTTP.md5(fs.readFileSync('./test/fixtures/test_table_13_4011_3088.pbf').toString())) {
+				throw "md5 of response did not match fixture"; 
+            };
+			done();
+        });
+    });
     
     test("get'ing a tile with default style and sql should return a constrained tile",  function(done){
         var sql = querystring.stringify({sql: "SELECT TOP 2 * FROM test_table"});
